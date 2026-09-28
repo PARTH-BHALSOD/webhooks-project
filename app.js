@@ -1,8 +1,9 @@
-const express = require("express");
-const webhookRouter = require("./routes/webhookRoutes");
+import express from "express";
+import webhookRouter from "./routes/webhookRoutes.js";
 
 const app = express();
-//for HMAC signature
+
+// Required to capture the raw buffer for HMAC-SHA256 signature verification
 app.use(
     express.json({
         verify: (req, res, buf) => {
@@ -13,6 +14,6 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/webhooks",webhookRouter);
+app.use("/webhooks", webhookRouter);
 
-module.exports = app;
+export default app;

@@ -1,8 +1,9 @@
-const express = require("express");
+import express from "express";
+import verifyWebhookSignature from "../middleware/webhookSignature.js";
+import * as WebhookController from "../controllers/webhookController.js";
+import webhookRateLimit from "../middleware/webhookRateLimit.js";
+
 const webhookRouter = express.Router();
-const verifyWebhookSignature = require("../middleware/webhookSignature");
-const WebhookController = require('../controller/webhookController');
-const webhookRateLimit = require("../middleware/webhookRateLimit");
 
 webhookRouter.post(
     "/test",
@@ -11,4 +12,4 @@ webhookRouter.post(
     WebhookController.testWebhooks
 );
 
-module.exports = webhookRouter;
+export default webhookRouter;

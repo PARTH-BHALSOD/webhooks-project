@@ -1,8 +1,8 @@
-const { Queue } = require("bullmq");
-const redisConfig = require("../config/redis");
+import { Queue } from "bullmq";
+import redisConfig from "../config/redis.js";
 
 const webhookQueue = new Queue("webhook-processing", {
     connection: redisConfig
 });
 
-module.exports = webhookQueue;
+export default webhookQueue;

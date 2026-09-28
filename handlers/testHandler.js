@@ -10,4 +10,4 @@ const testHandler = async (webhookEvent) => {
     };
 };
 
-module.exports = testHandler;
+export default testHandler;

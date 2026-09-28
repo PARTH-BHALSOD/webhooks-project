@@ -1,6 +1,6 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
-const webhookShcema = new mongoose.Schema(
+const webhookSchema = new mongoose.Schema(
   {
     eventId: {
       type: String,
@@ -17,6 +17,10 @@ const webhookShcema = new mongoose.Schema(
     },
     payload: {
       type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
+    rawBody: {
+      type: String,
       required: true,
     },
     status: {
@@ -46,6 +50,8 @@ const webhookShcema = new mongoose.Schema(
   }
 );
 
-webhookShcema.index({ source: 1, eventId: 1 }, { unique: true });
+webhookSchema.index({ source: 1, eventId: 1 }, { unique: true });
 
-module.exports = mongoose.model("WebhookEvent", webhookShcema);
+const WebhookEvent = mongoose.model("WebhookEvent", webhookSchema);
+
+export default WebhookEvent;

@@ -1,33 +1,25 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
-const generateSignature = (rawBody, timestamp, secret) => {
-    return crypto
-        .createHmac("sha256", secret)
-        .update(`${timestamp}.${rawBody}`)
-        .digest("hex");
+export const generateSignature = (rawBody, timestamp, secret) => {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(`${timestamp}.${rawBody}`)
+    .digest("hex");
 };
 
-const verifySignature = (rawBody, timestamp, signature, secret) => {
-    const expectedSignature = generateSignature(
-        rawBody,
-        timestamp,
-        secret
-    );
+export const verifySignature = (rawBody, timestamp, signature, secret) => {
+  const expectedSignature = generateSignature(rawBody, timestamp, secret);
 
-    if (
-        typeof signature !== "string" ||
-        signature.length !== expectedSignature.length
-    ) {
-        return false;
-    }
+  if (
+    typeof signature !== "string" ||
+    signature.length !== expectedSignature.length
+  ) {
+    return false;
+  }
 
-    return crypto.timingSafeEqual(
-        Buffer.from(expectedSignature),
-        Buffer.from(signature)
-    );
-};
-
-module.exports = {
-    generateSignature,
-    verifySignature
+  // CRITICAL FIX: Explicitly specify 'hex' encoding
+  return crypto.timingSafeEqual(
+    Buffer.from(expectedSignature, "hex"),
+    Buffer.from(signature, "hex")
+  );
 };

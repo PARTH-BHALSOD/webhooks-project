@@ -1,5 +1,5 @@
-const WebhookEvent = require("../models/WebhookEvent");
-const testHandler = require("../handlers/testHandler");
+import WebhookEvent from "../models/WebhookEvent.js";
+import testHandler from "../handlers/testHandler.js";
 
 const processWebhook = async (webhookEventId) => {
     const webhookEvent = await WebhookEvent.findById(webhookEventId);
@@ -40,4 +40,4 @@ const processWebhook = async (webhookEventId) => {
     return webhookEvent;
 };
 
-module.exports = processWebhook;
+export default processWebhook;

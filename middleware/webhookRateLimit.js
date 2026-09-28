@@ -1,8 +1,8 @@
-const rateLimit = require("express-rate-limit");
+import rateLimit from "express-rate-limit";
 
 const webhookRateLimit = rateLimit({
-  windowMs: 60 * 1000, //1 min 30 req
-  limit: 2,
+  windowMs: 60 * 1000, // 1 min 30 req
+  limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -10,4 +10,4 @@ const webhookRateLimit = rateLimit({
   },
 });
 
-module.exports = webhookRateLimit;
+export default webhookRateLimit;

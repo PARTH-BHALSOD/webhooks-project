@@ -1,8 +1,8 @@
-const WebhookEvent = require("../models/WebhookEvent");
-const webhookSchema = require("../validators/webhookValidator");
-const webhookQueue = require("../queues/webhookQueue");
+import WebhookEvent from "../models/WebhookEvent.js";
+import webhookSchema from "../validators/webhookValidator.js";
+import webhookQueue from "../queues/webhookQueue.js";
 
-exports.testWebhooks = async (req, res) => {
+export const testWebhooks = async (req, res) => {
   try {
     const result = webhookSchema.safeParse(req.body);
 
@@ -20,26 +20,26 @@ exports.testWebhooks = async (req, res) => {
       source,
       eventType,
       payload,
+      rawBody: req.rawBody, 
       receivedAt: new Date(),
+      status: "RECEIVED"
     });
-
-    
 
     const savedEvent = await webhookEvent.save();
 
     await webhookQueue.add(
       "process-webhook",
       {
-          webhookEventId: savedEvent._id.toString()
+        webhookEventId: savedEvent._id.toString()
       },
       {
-          attempts: 3,
-          backoff: {
-              type: "exponential",
-              delay: 1000
-          }
+        attempts: 3,
+        backoff: {
+          type: "exponential",
+          delay: 1000
+        }
       }
-  );
+    );
 
     console.log("Event saved:", savedEvent);
 

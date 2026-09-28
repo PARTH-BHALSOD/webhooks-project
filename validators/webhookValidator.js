@@ -1,4 +1,4 @@
-const { z } = require("zod");
+import { z } from "zod";
 
 const webhookSchema = z.object({
   eventId: z.string(),
@@ -7,4 +7,4 @@ const webhookSchema = z.object({
   payload: z.record(z.string(), z.unknown()),
 });
 
-module.exports = webhookSchema;
+export default webhookSchema;

@@ -25,10 +25,6 @@ const processWebhook = async (webhookEventId) => {
     // Route to appropriate handler based on source
     if (webhookEvent.source === "github") {
         handlerResult = await githubHandler(webhookEvent);
-    } else if (webhookEvent.source === "stripe") {
-        handlerResult = await stripeHandler(webhookEvent);
-    } else if (webhookEvent.eventType === "test.event") {
-        handlerResult = await testHandler(webhookEvent);
     } else {
         throw new Error(
             `No handler found for source: ${webhookEvent.source} and event type: ${webhookEvent.eventType}`

@@ -5,4 +5,4 @@ const webhookQueue = new Queue("webhook-processing", {
     connection: redisConfig
 });
 
-export default webhookQueue; //clll
+export default webhookQueue;

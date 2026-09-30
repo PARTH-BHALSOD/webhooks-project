@@ -52,6 +52,5 @@ const webhookSchema = new mongoose.Schema(
 
 webhookSchema.index({ source: 1, eventId: 1 }, { unique: true });
 
-const WebhookEvent = mongoose.model("WebhookEvent", webhookSchema);
-
+const WebhookEvent = mongoose.models.WebhookEvent || mongoose.model('WebhookEvent', webhookSchema);
 export default WebhookEvent;

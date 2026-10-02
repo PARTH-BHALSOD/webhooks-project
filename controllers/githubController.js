@@ -13,13 +13,6 @@ export const handleGithubWebhook = async (req, res) => {
       });
     }
 
-    // Normalize GitHub event to our format
-    const normalizedEvent = {
-      eventId,
-      source: "github",
-      eventType,
-      payload: req.body,
-    };
 
     // Save to database
     const webhookEvent = new WebhookEvent({

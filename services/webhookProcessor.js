@@ -1,6 +1,4 @@
 import WebhookEvent from "../models/WebhookEvent.js";
-import testHandler from "../handlers/testHandler.js";
-import stripeHandler from "../handlers/stripeHandler.js";
 import githubHandler from "../handlers/githubHandler.js";
 
 const processWebhook = async (webhookEventId) => {

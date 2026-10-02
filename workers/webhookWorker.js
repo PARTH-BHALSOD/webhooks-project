@@ -1,7 +1,7 @@
 import { Worker } from "bullmq";
 import redisConfig from "../config/redis.js";
 import db from "../config/database.js";
-import WebhookEvent from "../models/WebhookEvent.js";
+import WebhookEvent from "../models/webhookEvent.js";
 import processWebhook from "../services/webhookProcessor.js";
 
 db().then(() => {

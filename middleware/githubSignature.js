@@ -16,7 +16,7 @@ export const verifyGithubSignature = (req, res, next) => {
     });
   }
 
-  // GitHub sends: sha256=<hmac>
+ 
   const hmac = crypto
     .createHmac("sha256", process.env.GITHUB_WEBHOOK_SECRET)
     .update(req.rawBody)
@@ -24,7 +24,6 @@ export const verifyGithubSignature = (req, res, next) => {
 
   const expectedSignature = `sha256=${hmac}`;
 
-  // Timing-safe comparison
   const isValid = crypto.timingSafeEqual(
     Buffer.from(signature),
     Buffer.from(expectedSignature)

@@ -19,7 +19,6 @@ const sendDiscord = async (text) => {
 };
 
 export const notify = async ({ dedupeKey, message }) => {
-  // Check if already sent (prevents duplicate notifications on retries)
   const existing = await Notification.findOne({ dedupeKey });
   if (existing?.status === "SENT") {
     console.log(`Notification already sent for dedupeKey: ${dedupeKey}`);
@@ -27,10 +26,8 @@ export const notify = async ({ dedupeKey, message }) => {
   }
 
   try {
-    // Send to Discord
     await sendDiscord(message);
 
-    // Mark as sent
     await Notification.updateOne(
       { dedupeKey },
       {
@@ -46,7 +43,6 @@ export const notify = async ({ dedupeKey, message }) => {
 
     console.log(`Notification sent successfully: ${dedupeKey}`);
   } catch (error) {
-    // Save failed attempt
     await Notification.updateOne(
       { dedupeKey },
       {
@@ -60,7 +56,6 @@ export const notify = async ({ dedupeKey, message }) => {
       { upsert: true }
     );
 
-    // Re-throw to trigger BullMQ retry
     throw error;
   }
 };

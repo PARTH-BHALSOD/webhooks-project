@@ -7,7 +7,7 @@ import webhookRateLimit from "../middleware/webhookRateLimit.js";
 
 const webhookRouter = express.Router();
 
-// Test webhook endpoint (your custom format)
+
 webhookRouter.post(
     "/test",
     webhookRateLimit,
@@ -15,7 +15,6 @@ webhookRouter.post(
     WebhookController.testWebhooks
 );
 
-// GitHub webhook endpoint (real GitHub format)
 webhookRouter.post(
     "/github",
     webhookRateLimit,

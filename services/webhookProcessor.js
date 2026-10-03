@@ -1,4 +1,4 @@
-import WebhookEvent from "../models/WebhookEvent.js";
+import WebhookEvent from "../models/webhookEvent.js";
 import githubHandler from "../handlers/githubHandler.js";
 
 const processWebhook = async (webhookEventId) => {

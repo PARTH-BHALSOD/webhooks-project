@@ -1,5 +1,6 @@
 import WebhookEvent from "../models/webhookEvent.js";
 import githubHandler from "../handlers/githubHandler.js";
+import stripeHandler from "../handlers/stripeHandler.js";
 
 const processWebhook = async (webhookEventId) => {
     const webhookEvent = await WebhookEvent.findById(webhookEventId);
@@ -20,9 +21,10 @@ const processWebhook = async (webhookEventId) => {
 
     let handlerResult;
 
-    // Route to appropriate handler based on source
     if (webhookEvent.source === "github") {
         handlerResult = await githubHandler(webhookEvent);
+    } else if (webhookEvent.source === "stripe") {
+        handlerResult = await stripeHandler(webhookEvent);
     } else {
         throw new Error(
             `No handler found for source: ${webhookEvent.source} and event type: ${webhookEvent.eventType}`

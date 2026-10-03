@@ -3,7 +3,6 @@ import webhookQueue from "../queues/webhookQueue.js";
 
 export const handleGithubWebhook = async (req, res) => {
   try {
-    // GitHub sends event type in X-GitHub-Event header
     const eventType = req.headers["x-github-event"];
     const eventId = req.headers["x-github-delivery"];
 
@@ -12,9 +11,7 @@ export const handleGithubWebhook = async (req, res) => {
         message: "Missing GitHub event headers",
       });
     }
-
-
-    // Save to database
+  
     const webhookEvent = new WebhookEvent({
       eventId,
       source: "github",
@@ -26,8 +23,7 @@ export const handleGithubWebhook = async (req, res) => {
     });
 
     const savedEvent = await webhookEvent.save();
-
-    // Add to queue for processing
+ 
     await webhookQueue.add(
       "process-webhook",
       {
@@ -44,14 +40,13 @@ export const handleGithubWebhook = async (req, res) => {
 
     console.log(`GitHub ${eventType} event saved:`, savedEvent._id);
 
-    // GitHub expects 200 for success
+   
     return res.status(200).json({
       message: "Webhook received successfully",
     });
   } catch (error) {
     if (error.code === 11000) {
-      // Duplicate event - GitHub retried
-      // Return 200 so GitHub doesn't keep retrying
+     
       return res.status(200).json({
         message: "Webhook event already processed",
       });

@@ -1,4 +1,4 @@
-import WebhookEvent from "../models/WebhookEvent.js";
+import WebhookEvent from "../models/webhookEvent.js";
 import webhookSchema from "../validators/webhookValidator.js";
 import webhookQueue from "../queues/webhookQueue.js";
 

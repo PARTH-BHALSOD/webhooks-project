@@ -8,7 +8,10 @@ const sendDiscord = async (text) => {
   const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: text }),
+    body: JSON.stringify({
+      content: text.slice(0, 1900), // Discord limit is 2000 chars
+      allowed_mentions: { parse: [] }, // never ping @everyone/@here/users
+    }),
   });
 
   if (!res.ok) {

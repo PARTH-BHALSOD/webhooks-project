@@ -1,17 +1,20 @@
 import WebhookEvent from "../models/webhookEvent.js";
 import webhookQueue from "../queues/webhookQueue.js";
 
-export const handleGithubWebhook = async (req, res) => {
-  try {
-    const eventType = req.headers["x-github-event"];
-    const eventId = req.headers["x-github-delivery"];
+const jobOptions = {
+  attempts: 3,
+  backoff: { type: "exponential", delay: 1000 },
+};
 
-    if (!eventType || !eventId) {
-      return res.status(400).json({
-        message: "Missing GitHub event headers",
-      });
-    }
-  
+export const handleGithubWebhook = async (req, res) => {
+  const eventType = req.headers["x-github-event"];
+  const eventId = req.headers["x-github-delivery"];
+
+  if (!eventType || !eventId) {
+    return res.status(400).json({ message: "Missing GitHub event headers" });
+  }
+
+  try {
     const webhookEvent = new WebhookEvent({
       eventId,
       source: "github",
@@ -23,38 +26,34 @@ export const handleGithubWebhook = async (req, res) => {
     });
 
     const savedEvent = await webhookEvent.save();
- 
+
     await webhookQueue.add(
       "process-webhook",
-      {
-        webhookEventId: savedEvent._id.toString(),
-      },
-      {
-        attempts: 3,
-        backoff: {
-          type: "exponential",
-          delay: 1000,
-        },
-      }
+      { webhookEventId: savedEvent._id.toString() },
+      jobOptions
     );
 
-    console.log(`GitHub ${eventType} event saved:`, savedEvent._id);
-
-   
-    return res.status(200).json({
-      message: "Webhook received successfully",
-    });
+    return res.status(200).json({ message: "Webhook received successfully" });
   } catch (error) {
     if (error.code === 11000) {
-     
-      return res.status(200).json({
-        message: "Webhook event already processed",
+      // Duplicate delivery: re-enqueue only if it never finished processing
+      const existingEvent = await WebhookEvent.findOne({
+        source: "github",
+        eventId,
       });
-    } else {
-      console.error("Error saving GitHub webhook:", error);
-      return res.status(500).json({
-        message: "Failed to save webhook",
-      });
+
+      if (existingEvent && existingEvent.status !== "SUCCESS") {
+        await webhookQueue.add(
+          "process-webhook",
+          { webhookEventId: existingEvent._id.toString() },
+          { jobId: eventId, ...jobOptions }
+        );
+      }
+
+      return res.status(200).json({ message: "Webhook event already processed" });
     }
+
+    console.error("Error saving GitHub webhook:", error);
+    return res.status(500).json({ message: "Failed to save webhook" });
   }
 };

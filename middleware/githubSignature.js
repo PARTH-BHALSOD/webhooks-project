@@ -16,7 +16,10 @@ export const verifyGithubSignature = (req, res, next) => {
     });
   }
 
- 
+  if (!req.rawBody) {
+    return res.status(400).json({ message: "Missing request body" });
+  }
+
   const hmac = crypto
     .createHmac("sha256", process.env.GITHUB_WEBHOOK_SECRET)
     .update(req.rawBody)
@@ -24,10 +27,13 @@ export const verifyGithubSignature = (req, res, next) => {
 
   const expectedSignature = `sha256=${hmac}`;
 
-  const isValid = crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+  const sigBuf = Buffer.from(signature);
+  const expectedBuf = Buffer.from(expectedSignature);
+
+  // timingSafeEqual throws if lengths differ, so check length first
+  const isValid =
+    sigBuf.length === expectedBuf.length &&
+    crypto.timingSafeEqual(sigBuf, expectedBuf);
 
   if (!isValid) {
     return res.status(401).json({

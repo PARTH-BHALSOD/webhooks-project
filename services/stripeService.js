@@ -17,9 +17,10 @@ export const getStripeInstance = () => {
   return stripe;
 };
 
+// Webhook verification doesn't need API key - it's a static method
 export const constructEvent = (rawBody, signature, secret) => {
   try {
-    const event = stripe.webhooks.constructEvent(rawBody, signature, secret);
+    const event = Stripe.webhooks.constructEvent(rawBody, signature, secret);
     return { success: true, event };
   } catch (error) {
     return { success: false, error: error.message };

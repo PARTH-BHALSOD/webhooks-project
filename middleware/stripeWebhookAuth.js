@@ -34,7 +34,6 @@ export const verifyStripeSignature = (req, res, next) => {
     console.error("Stripe signature verification failed:", result.error);
     return res.status(401).json({
       message: "Invalid Stripe signature",
-      error: result.error,
     });
   }
 

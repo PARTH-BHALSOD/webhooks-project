@@ -16,14 +16,6 @@ export const verifyStripeSignature = (req, res, next) => {
     });
   }
 
-  // Debug logging
-  console.log("Verifying Stripe webhook:");
-  console.log("- Signature header present:", !!signature);
-  console.log("- Raw body type:", typeof req.rawBody);
-  console.log("- Raw body is Buffer:", Buffer.isBuffer(req.rawBody));
-  console.log("- Raw body length:", req.rawBody?.length);
-  console.log("- Webhook secret configured:", !!process.env.STRIPE_WEBHOOK_SECRET);
-
   const result = constructEvent(
     req.rawBody,
     signature,

@@ -52,5 +52,8 @@ const webhookSchema = new mongoose.Schema(
 
 webhookSchema.index({ source: 1, eventId: 1 }, { unique: true });
 
+// Auto-delete events 30 days after they were received
+webhookSchema.index({ receivedAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
+
 const WebhookEvent = mongoose.models.WebhookEvent || mongoose.model('WebhookEvent', webhookSchema);
 export default WebhookEvent;

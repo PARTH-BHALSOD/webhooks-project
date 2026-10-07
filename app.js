@@ -2,7 +2,7 @@ import express from "express";
 import webhookRouter from "./routes/webhookRoutes.js";
 
 const app = express();
-app.set('trust proxy', 1);
+app.set("trust proxy", Number(process.env.TRUST_PROXY ?? 1));
 
 app.use(
   express.json({

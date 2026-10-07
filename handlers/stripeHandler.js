@@ -23,10 +23,6 @@ const stripeHandler = async (evt) => {
       message = `⚠️ **Invoice Payment Failed**\n💰 Amount Due: ${formatMoney(p.amount_due, p.currency)}\n🔗 Invoice ID: ${p.id}`;
       break;
 
-    case "customer.subscription.deleted":
-      message = `🚫 **Subscription Cancelled**\n👤 Customer: ${p.customer}\n📅 Ended: ${p.ended_at ? new Date(p.ended_at * 1000).toLocaleDateString() : "N/A"}`;
-      break;
-
     case "charge.dispute.created":
       message = `🚨 **Dispute Opened**\n💰 Amount: ${formatMoney(p.amount, p.currency)}\n📌 Reason: ${p.reason}\n🔗 Dispute ID: ${p.id}`;
       break;

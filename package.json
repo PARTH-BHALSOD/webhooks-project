@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "worker": "node workers/webhookWorker.js",
-    "dev": "node --watch server.js",
-    "test": "vitest run"
+    "worker": "node workers/webhookWorker.js"
   },
   "keywords": [],
   "author": "",
